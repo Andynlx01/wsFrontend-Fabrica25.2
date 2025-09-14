@@ -1,25 +1,50 @@
 import { useEffect, useState } from "react";
-import { fetchPokemons } from "../services/api";
 
 export default function Home() {
   const [pokemons, setPokemons] = useState([]);
 
   useEffect(() => {
-    async function load() {
-      const list = await fetchPokemons(20, 0);
-      setPokemons(list);
+    async function fetchPokemons() {
+      try {
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+        const data = await response.json();
+
+        // Agora buscamos os detalhes de cada Pokémon (pra ter ID e imagem)
+        const detailedPokemons = await Promise.all(
+          data.results.map(async (pokemon) => {
+            const res = await fetch(pokemon.url);
+            return res.json();
+          })
+        );
+
+        setPokemons(detailedPokemons);
+      } catch (error) {
+        console.error("Erro ao buscar pokémons:", error);
+      }
     }
-    load();
+
+    fetchPokemons();
   }, []);
 
   return (
-    <div className="pokemon-list">
-    {pokemons.map(p => (
-      <div className="pokemon-card" key={p.name}>
-        <h3>{p.name}</h3>
+    <div>
+      <header>
+        <h1>Pokédex</h1>
+      </header>
+
+      <div className="pokemon-list">
+        {pokemons.map((p) => (
+          <div className="pokemon-card" key={p.id}>
+            <img src={p.sprites.front_default} alt={p.name} />
+            <h3>{p.name}</h3>
+            <p>ID: #{p.id}</p>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-  
+
+      <footer>
+        <p>Feito com ❤️ e React</p>
+      </footer>
+    </div>
   );
 }
