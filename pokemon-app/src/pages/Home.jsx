@@ -13,13 +13,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      <h2>Lista de Pokémons</h2>
-      <ul>
-        {pokemons.map(p => (
-          <li key={p.name}>{p.name}</li>
-        ))}
-      </ul>
-    </div>
+    <div className="pokemon-list">
+    {pokemons.map(p => (
+      <div className="pokemon-card" key={p.name}>
+        <h3>{p.name}</h3>
+      </div>
+    ))}
+  </div>
+  
   );
 }
