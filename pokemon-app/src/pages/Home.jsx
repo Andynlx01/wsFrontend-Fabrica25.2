@@ -28,10 +28,6 @@ export default function Home() {
 
   return (
     <div>
-      <header>
-        <h1>Pokédex</h1>
-      </header>
-
       <div className="pokemon-list">
         {pokemons.map((p) => (
           <div className="pokemon-card" key={p.id}>
@@ -41,10 +37,6 @@ export default function Home() {
           </div>
         ))}
       </div>
-
-      <footer>
-        <p>Feito com ❤️ e React</p>
-      </footer>
     </div>
   );
 }
